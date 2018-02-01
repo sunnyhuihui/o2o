@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xmh.o2o.dao.ShopDao">
+
+	<resultMap type="com.xmh.o2o.pojo.Shop" id="ShopMap">
+		<id column="shop_id" property="shopId"/>
+		<result column="shop_name" property="shopName"/>
+		<result column="shop_addr" property="shopAddr"/>
+		<result column="shop_img" property="shopImg"/>
+		<result column="phone" property="phone"/>
+		<result column="enable_status" property="enableStatus"/>
+		<result column="advice" property="advice"/>
+		<result column="priority" property="priority"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+		
+		<association property="area" column="area_id" javaType="com.xmh.o2o.pojo.Area">
+			<id column="area_id" property="areaId"/>
+			<result column="area_name" property="areaName"/>
+		</association>
+		
+		<association property="shopCategory" column="shop_category_id" javaType="com.xmh.o2o.pojo.ShopCategory">
+			<id column="shop_category_id" property="shopCategoryId"/>
+			<result column="shop_category_name" property="shopCategoryName"/>
+		</association>
+		
+		
+		
+		<association property="owner" column="user_id" javaType="com.xmh.o2o.pojo.PersonInfo">
+			<id column="user_id" property="userId"/>
+			<result column="name" property="name"/>
+		</association>
+	</resultMap>
+	
+	<select id="queryByShopId" resultMap="shopMap" parameterMap="Integer" >
+		select	
+		s.shop_id,
+		s.shop_name,
+		s.shop_desc,
+		s.shop_img,
+		s.shop_addr,
+		s.priority,
+		s.advice,
+		s.enable_status,
+		s.phone,
+		s.create_time,
+		s.update_time,
+		
+		a.area_id,
+		a.area_name,
+		
+		sc.shop_category_id,
+		sc.shop_category_name,
+
+		from		
+		tb_shop s,		
+		tb_area a,
+		tb_shop_category sc
+		where
+		a.area_id=a.areaId
+		and
+		s.shop_category_id= sc.shopCategoryId
+		and
+		s.shop_id = #{shopId}
+	</select>
+
+
+	<!-- useGenerateKeys=true 就是查询数据库时候就会自动取出shop_id 然后就会放到实体类的Shop中 -->
+	<insert id="insertShop" useGeneratedKeys="true" keyColumn="shop_id"
+		keyProperty="shopId">
+		insert into tb_shop(owner_id,area_id,shop_category_id,shop_name,shop_desc,
+		shop_addr,phone,shop_img,enable_status,advice,priority,create_time,update_time)
+		values(
+		#{owner.userId},#{area.areaId},#{shopCategory.shopCategoryId},
+		#{shopName},#{shopDesc},#{shopAddr},#{phone},#{shopImg},#{enableStatus},
+		#{advice},#{priority},#{createTime},#{updateTime}
+		)
+	</insert>
+
+	<update id="updateShop" parameterType="com.xmh.o2o.pojo.Shop">
+	update tb_shop
+	<set>
+		<if test="shopName!=null">shop_name = #{shopName},</if>
+		<if test="shopDesc!=null">shop_desc = #{shopDesc},</if>
+		<if test="shopAddr!=null">shop_addr = #{shopAddr},</if>
+		<if test="phone!=null">phone = #{phone},</if>
+		<if test="shopImg!=null">shop_img = #{shopImg},</if>
+		<if test="enableStatus!=null">enable_status = #{enableStatus},</if>
+		<if test="advice!=null">advice = #{advice},</if>
+		<if test="priority != null">priority = #{priority},</if>
+		<if test="shopCategory!=null">shop_category_id = #{shopCategory.shopCategoryId},</if>
+		<if test="area!=null">area_id = #{area.areaId}</if>
+	</set>
+		where shop_id=#{shopId}
+	</update>
+</mapper>
