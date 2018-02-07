@@ -5,7 +5,7 @@
 
 <mapper namespace="com.xmh.o2o.dao.ShopDao">
 
-	<resultMap type="com.xmh.o2o.pojo.Shop" id="ShopMap">
+	<resultMap type="com.xmh.o2o.pojo.Shop" id="shopMap">
 		<id column="shop_id" property="shopId"/>
 		<result column="shop_name" property="shopName"/>
 		<result column="shop_addr" property="shopAddr"/>
@@ -35,7 +35,7 @@
 		</association>
 	</resultMap>
 	
-	<select id="queryByShopId" resultMap="shopMap" parameterMap="Integer" >
+	<select id="queryByShopId" resultMap="shopMap"  >
 		select	
 		s.shop_id,
 		s.shop_name,

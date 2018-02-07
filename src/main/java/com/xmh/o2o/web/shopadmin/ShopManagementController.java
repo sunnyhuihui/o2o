@@ -68,7 +68,7 @@ public class ShopManagementController {
 		}catch(Exception e) {
 			result.setSuccess(false);
 			result.setStatus(1);
-			result.setMsg("getshopinitinfo发生错误");
+			result.setMsg("getshopinitinfo发生错误"+e.getMessage());
 			return result;
 		}
 	}
